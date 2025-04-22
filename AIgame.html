@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock Paper Scissors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      margin: 0;
+      padding: 50px;
+    }
+
+    .game-container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .choices button,
+    .end-button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #007acc;
+      color: white;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .choices button:hover,
+    .end-button:hover {
+      background-color: #005fa3;
+    }
+
+    .result, .score {
+      margin-top: 20px;
+    }
+
+    .final-result {
+      font-weight: bold;
+      margin-top: 30px;
+      color: #d9534f;
+    }
+
+    .disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Rock Paper Scissors</h1>
+
+    <div class="score">
+      <p>🧍‍♂️ You: <span id="user-score">0</span></p>
+      <p>🤖 Computer: <span id="computer-score">0</span></p>
+    </div>
+
+    <div class="choices" id="buttons">
+      <button onclick="playGame('rock')">🪨 Rock</button>
+      <button onclick="playGame('paper')">📄 Paper</button>
+      <button onclick="playGame('scissors')">✂️ Scissors</button>
+    </div>
+
+    <button class="end-button" onclick="endGame()">End Game</button>
+
+    <div class="result">
+      <p id="user-choice"></p>
+      <p id="computer-choice"></p>
+      <h2 id="winner"></h2>
+    </div>
+
+    <p class="final-result" id="final-result"></p>
+  </div>
+
+  <script>
+    let userScore = 0;
+    let computerScore = 0;
+    let gameOver = false;
+
+    function playGame(userChoice) {
+      if (gameOver) return;
+
+      const choices = ['rock', 'paper', 'scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+      document.getElementById('user-choice').textContent = `You chose: ${userChoice}`;
+      document.getElementById('computer-choice').textContent = `Computer chose: ${computerChoice}`;
+
+      const winner = getWinner(userChoice, computerChoice);
+      document.getElementById('winner').textContent = winner;
+
+      if (winner.includes("You win")) {
+        userScore++;
+      } else if (winner.includes("Computer wins")) {
+        computerScore++;
+      }
+
+      document.getElementById('user-score').textContent = userScore;
+      document.getElementById('computer-score').textContent = computerScore;
+    }
+
+    function getWinner(user, computer) {
+      if (user === computer) return "It's a tie!";
+      if (
+        (user === 'rock' && computer === 'scissors') ||
+        (user === 'paper' && computer === 'rock') ||
+        (user === 'scissors' && computer === 'paper')
+      ) {
+        return "You win! 🎉";
+      } else {
+        return "Computer wins! 🤖";
+      }
+    }
+
+    function endGame() {
+      gameOver = true;
+
+      document.getElementById('buttons').classList.add('disabled');
+
+      const finalMessage =
+        userScore > computerScore
+          ? "Game over! You win overall! 🏆"
+          : userScore < computerScore
+          ? "Game over! Computer wins overall! 🤖"
+          : "Game over! It's a tie overall! 🤝";
+
+      document.getElementById('final-result').textContent = finalMessage;
+
+      // Optionally offer a "Restart" after ending
+      const restartBtn = document.createElement('button');
+      restartBtn.textContent = "Play Again 🔁";
+      restartBtn.className = "end-button";
+      restartBtn.onclick = () => location.reload();
+      document.querySelector('.game-container').appendChild(restartBtn);
+    }
+  </script>
+</body>
+</html>
